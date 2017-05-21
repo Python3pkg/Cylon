@@ -2,10 +2,9 @@ import re
 import logging
 from abc import ABCMeta, abstractmethod
 
-class Hook:
+class Hook(metaclass=ABCMeta):
 
 
-  __metaclass__ = ABCMeta
   hooks = {}
   settings = {}
   connection = None
@@ -19,5 +18,5 @@ class Hook:
 
 
   def build_regex(self):
-    for r in self.ACTIONS.keys():
+    for r in list(self.ACTIONS.keys()):
       self.regex.append((re.compile(r), self.ACTIONS[r]))

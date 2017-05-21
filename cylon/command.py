@@ -69,7 +69,7 @@ def cmd_to_class(command):
 def compute_aliases(alias_info, class_inst, plugin_name):
   logging.debug("Loading aliases...")
   alias_hash = {}
-  for method_name, alias_name in alias_info.iteritems():
+  for method_name, alias_name in alias_info.items():
     alias_hash.update({alias_name : { method_name : class_inst }})
   logging.debug("Final alias list:")
   logging.debug(alias_hash)
@@ -98,11 +98,11 @@ def get_needed_class(filenames, plugin_list, alias_list):
         class_inst = class_()
         if class_inst.is_public():
           plugins['publics'].update({name : class_inst})
-          if name in alias_list.keys():
+          if name in list(alias_list.keys()):
             aliases['publics'].update(compute_aliases(alias_list[name], class_inst, name))
         else:
           plugins['privates'].update({name : class_inst})
-          if alias_list.has_key(name):
+          if name in alias_list:
             aliases['privates'].update(compute_aliases(alias_list[name], class_inst, name))
       except TypeError:
         logging.error("You need to define help method for %s plugin class" % wanted_class)

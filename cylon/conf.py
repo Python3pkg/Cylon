@@ -25,7 +25,7 @@ class Settings:
       logging.debug("Starting configuration parsing")
       try:
         stream = file(conf_file, 'r')
-      except Exception, e:
+      except Exception as e:
         logging.error("%s read: %s" % (conf_file, str(e)))
         exit()
       logging.info("Loading %s" % conf_file)
@@ -39,7 +39,7 @@ class Settings:
       logging.debug("Get alias list settings:")
       alias_hash = {}
       for alias in alias_list:
-        str_ = alias.keys()[0]
+        str_ = list(alias.keys())[0]
         data = str_.split('.')
         if str_ == data[0]:
           logging.info("Alias %s not loaded." % data[0])
@@ -51,19 +51,19 @@ class Settings:
             logging.info("Alias %s not loaded." % data[0])
             continue
           plugin_method = data[1]
-          if alias_hash.has_key(plugin_name):
+          if plugin_name in alias_hash:
             alias_hash[plugin_name].update({ plugin_method : alias_name})
           else:
             alias_hash.update({ plugin_name : { plugin_method : alias_name }})
         del alias
-      print alias_hash
+      print(alias_hash)
       return alias_hash
 
     def __check(self):
       logging.debug("Configuration check")
       for attr_type in self.ATTRS:
         for attr in attr_type:
-          if self._conf_file_values.has_key(attr):
+          if attr in self._conf_file_values:
             if not isinstance(self._conf_file_values[attr], attr_type[attr]):
               if not attr.startswith("loaded_"):
                 logging.error("Type error in configuration file: %s has to be a %s." %

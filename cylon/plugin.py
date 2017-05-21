@@ -1,9 +1,8 @@
 import logging
 from abc import ABCMeta, abstractmethod
 
-class Plugin:
+class Plugin(metaclass=ABCMeta):
 
-  __metaclass__ = ABCMeta
   plugins = {}
   settings = {}
   connection = None
@@ -24,9 +23,7 @@ class Plugin:
   def help(self):
    pass
 
-class Public(Plugin):
-
-  __metaclass__ = ABCMeta
+class Public(Plugin, metaclass=ABCMeta):
 
   def is_public(self):
    return True
@@ -38,9 +35,7 @@ class Public(Plugin):
   def help(self):
    pass
 
-class Private(Plugin):
-
-  __metaclass__ = ABCMeta
+class Private(Plugin, metaclass=ABCMeta):
 
   def is_public(self):
    return False

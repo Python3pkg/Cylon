@@ -26,7 +26,7 @@ class Plug(Private):
 
   def list(self, body, from_user, chat_type, args):
     msg = "\n"
-    for type_ in list(self.modules.viewkeys()):
+    for type_ in list(self.modules.keys()):
       msg = msg + type_ + ":\n"
       for plugin_name in self.modules[type_]:
         msg = msg + "    - %s\n" % plugin_name

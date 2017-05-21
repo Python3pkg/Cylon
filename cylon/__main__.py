@@ -124,14 +124,14 @@ class Cylon:
         logging.info(cmd)
       cmd_parameters = cmd.split()
       plugin_name = cmd_parameters[0]
-      if modules.has_key(plugin_name) or aliases.has_key(plugin_name):
-        if aliases.has_key(plugin_name):
-          func = aliases[plugin_name].keys()[0]
+      if plugin_name in modules or plugin_name in aliases:
+        if plugin_name in aliases:
+          func = list(aliases[plugin_name].keys())[0]
           inst = aliases[plugin_name][func]
           cmd_parameters.pop(0)
           try:
             msg = self.__call_plugin(mess, inst, func, cmd_parameters)
-          except AttributeError, e:
+          except AttributeError as e:
             msg = "Function %s not implemented." % func
             logging.error("%s plugin exec: %s" % (class_, str(e)))
         else:
@@ -145,7 +145,7 @@ class Cylon:
             # Way to test if class exists.If exception, error msg.
             method = getattr(inst, func)
             msg = self.__call_plugin(mess, inst, func, cmd_parameters)
-          except AttributeError, e:
+          except AttributeError as e:
             msg = "Function %s not implemented." % func
             logging.error("%s plugin exec: %s" % (class_, str(e)))
       else:
@@ -161,7 +161,7 @@ class Cylon:
       msg = class_.wrapper(func, xmpp_mess.getBody(),
                            xmpp_mess.getFrom(), xmpp_mess.getType(),
                            param)
-    except Exception, e:
+    except Exception as e:
       msg = "Error during %s function execution." % func
       logging.error("%s plugin exec: %s" % (class_, str(e)))
 
@@ -236,7 +236,7 @@ class Cylon:
         logging.error("Unable to connect to server %s." %
                        self._jid.getDomain())
         exit()
-      if res<>'tls':
+      if res!='tls':
         logging.warning("Unable to establish TLS connection.")
 
       res = conn.auth(self._jid.getNode(),
@@ -245,7 +245,7 @@ class Cylon:
       if not res:
         logging.error("Unable to authenticate this connection.")
         exit()
-      if res<>'sasl':
+      if res!='sasl':
         logging.warning("Unable to get SASL creditential for: %s." %
                         self.jid.getDomain())
       conn.RegisterHandler('message', self.message_handler)
@@ -261,7 +261,7 @@ class Cylon:
   def __join_muc(self):
     for room_config in self._settings.groupchat:
       if isinstance(room_config, dict):
-        for k, v in room_config.iteritems():
+        for k, v in room_config.items():
           presence = xmpp.Presence(to="%s/%s" % (k, self._settings.chat_name))
           presence.setTag('x', namespace='http://jabber.org/protocol/muc').setTagData('password',v)
       else:
